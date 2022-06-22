@@ -42,6 +42,15 @@ public class AddColumnClause extends AlterTableClause {
     // set in analyze
     private Column column;
 
+    public AddColumnClause(ColumnDef columnDef, ColumnPosition colPos, String rollupName,
+                           Map<String, String> properties) {
+        super(AlterOpType.SCHEMA_CHANGE);
+        this.columnDef = columnDef;
+        this.colPos = colPos;
+        this.rollupName = rollupName;
+        this.properties = properties;
+    }
+
     public Column getColumn() {
         return column;
     }
@@ -52,15 +61,6 @@ public class AddColumnClause extends AlterTableClause {
 
     public String getRollupName() {
         return rollupName;
-    }
-
-    public AddColumnClause(ColumnDef columnDef, ColumnPosition colPos, String rollupName,
-                           Map<String, String> properties) {
-        super(AlterOpType.SCHEMA_CHANGE);
-        this.columnDef = columnDef;
-        this.colPos = colPos;
-        this.rollupName = rollupName;
-        this.properties = properties;
     }
 
     @Override
@@ -89,11 +89,6 @@ public class AddColumnClause extends AlterTableClause {
     }
 
     @Override
-    public Map<String, String> getProperties() {
-        return this.properties;
-    }
-
-    @Override
     public String toSql() {
         StringBuilder sb = new StringBuilder();
         sb.append("ADD COLUMN ").append(columnDef.toSql());
@@ -104,6 +99,11 @@ public class AddColumnClause extends AlterTableClause {
             sb.append(" IN `").append(rollupName).append("`");
         }
         return sb.toString();
+    }
+
+    @Override
+    public Map<String, String> getProperties() {
+        return this.properties;
     }
 
     @Override
